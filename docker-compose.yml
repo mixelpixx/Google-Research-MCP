@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  google-research-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: google-research-mcp-unified
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_SEARCH_ENGINE_ID=${GOOGLE_SEARCH_ENGINE_ID}
+      - SEARCH_CACHE_TTL_MINUTES=5
+      - CONTENT_CACHE_TTL_MINUTES=30
+      - MAX_CACHE_ENTRIES=100
+      - REQUEST_TIMEOUT_MS=30000
+      - MAX_CONTENT_SIZE_MB=50
+      - CONCURRENT_REQUEST_LIMIT=10
+      - RATE_LIMIT_WINDOW_MS=60000
+      - RATE_LIMIT_MAX_REQUESTS=100
+    volumes:
+      - ./logs:/app/logs:rw
+    networks:
+      - mcp-network
+    # Uncomment if you need to expose ports for health checks
+    # ports:
+    #   - "3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "
+        const { healthChecker } = require('./dist/utils/health-check.js');
+        healthChecker.performHealthCheck()
+          .then(result => process.exit(result.status === 'healthy' ? 0 : 1))
+          .catch(() => process.exit(1));
+      "]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Optional: Add a monitoring service
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: mcp-monitoring
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - mcp-network
+    profiles:
+      - monitoring
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local

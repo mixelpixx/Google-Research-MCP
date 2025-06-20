@@ -1,0 +1,74 @@
+{
+  "name": "google-search-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Google search and webpage analysis",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "start:google-only": "node dist/google-search.js",
+    "start:research:legacy": "node dist/research-mcp.js",
+    "start:research:deprecated": "node dist/research-mcp.deprecated.js",
+    "dev": "tsc -w",
+    "build:dist": "node build-dist.js",
+    "validate-config": "node -e \"const {validateEnvironment} = require('./dist/config/environment.js'); const result = validateEnvironment(); console.log(JSON.stringify(result, null, 2)); process.exit(result.isValid ? 0 : 1);\"",
+    "health-check": "node -e \"const {healthChecker} = require('./dist/utils/health-check.js'); healthChecker.performHealthCheck().then(r => console.log(JSON.stringify(r, null, 2)));\"",
+    "docker:build": "docker build -t google-research-mcp .",
+    "docker:run": "docker-compose up -d",
+    "docker:logs": "docker-compose logs -f google-research-mcp",
+    "docker:stop": "docker-compose down",
+    "docker:health": "docker-compose exec google-research-mcp npm run health-check",
+    "lint": "echo 'Linting not configured - consider adding ESLint'",
+    "test": "echo 'Tests not configured - consider adding Jest or Vitest'",
+    "test:integration": "echo 'Integration tests not configured'",
+    "audit:security": "npm audit --audit-level moderate",
+    "audit:dependencies": "npm ls --depth=0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "@mozilla/readability": "^0.6.0",
+    "@types/turndown": "^5.0.5",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "dompurify": "^3.2.3",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "jsdom": "^25.0.1",
+    "markdown-it": "^14.1.0",
+    "readability": "^0.1.0",
+    "turndown": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/dompurify": "^3.0.5",
+    "@types/express": "^4.17.21",
+    "@types/jsdom": "^21.1.7",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^20.17.21",
+    "@types/uuid": "^10.0.0",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "google-search",
+    "web-scraping",
+    "research",
+    "ai-tools"
+  ],
+  "author": "Your Organization",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/google-research-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/google-research-mcp-server/issues"
+  },
+  "homepage": "https://github.com/your-org/google-research-mcp-server#readme"
+}
