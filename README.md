@@ -12,17 +12,6 @@ An advanced Model Context Protocol (MCP) server that provides comprehensive Goog
 
 **NEW:** This server now supports multiple search providers! Choose the best option for your needs.
 
-### Supported Search Providers
-
-| Provider | Free Tier | Paid Pricing | Status | Best For |
-|----------|-----------|--------------|--------|----------|
-| **Brave** (Recommended) | 2,000/month | $3/mo (5k) | Active | General use, privacy, cost-effective |
-| **Tavily** | 1,000/month | $30/mo (4k) | Active | AI research, synthesis, quality |
-| **Google** | 100/day | $5/1k queries | Sunsets 2027 | Legacy users only |
-
-**Recommended**: Use **Brave** for most use cases (10-20x better free tier than Google).
-
-### Quick Setup by Provider
 
 #### Brave Search (Recommended)
 
