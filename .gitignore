@@ -1,0 +1,20 @@
+# Rust build output
+/target/
+
+# Local secrets / runtime config (never commit)
+.env
+*.env
+config.toml
+serp-api-key.txt
+
+# Crash logs written next to the exe
+*-crash.log
+google-research-mcp-crash.log
+
+# OS / editor cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+
+# Note: binary-release/ is intentionally tracked — it ships the prebuilt .exe.

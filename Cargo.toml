@@ -1,0 +1,85 @@
+[package]
+name = "google-research-mcp"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+name = "google_research_mcp"
+path = "src/lib.rs"
+
+[[bin]]
+name = "google-research-mcp"
+path = "src/main.rs"
+
+[[bin]]
+name = "google-research-mcp-tray"
+path = "src/bin/tray_main.rs"
+
+[dependencies]
+rmcp = { version = "1.5", features = [
+    "server",
+    "macros",
+    "transport-io",
+    "transport-streamable-http-server",
+    "schemars",
+] }
+
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std"] }
+
+# rustls-tls avoids OpenSSL — static exe with no system DLL dependencies
+reqwest = { version = "0.13.2", default-features = false, features = [
+    "json",
+    "rustls",
+    "gzip",     # SerpAPI and most modern APIs serve gzip-compressed JSON
+    "brotli",   # ditto for Brotli
+] }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Must match rmcp's schemars version (1.0)
+schemars = "1.0"
+
+anyhow = "1.0"
+thiserror = "2"
+
+# Pure-Rust HTML parser (no native deps)
+scraper = "0.23"
+
+# HTML → Markdown, pure Rust
+htmd = "0.2"
+
+futures = "0.3"
+url = "2.4"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio"] }
+dirs = "5"
+toml = "0.8"
+
+# Windows-only deps: registry for autostart, tray icon, native Win32 message pump,
+# native GUI installer
+[target.'cfg(windows)'.dependencies]
+winreg = "0.52"
+tray-icon = "0.21"
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Console",
+    "Win32_UI_WindowsAndMessaging",
+] }
+native-windows-gui = "1.0"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"
+
+# Embed a Windows application manifest into both binaries. Required by
+# native-windows-gui (and any code that touches Common Controls v6 APIs
+# like GetWindowSubclass). Without this, the EXE fails to load on launch
+# with "procedure entry point GetWindowSubclass could not be located".
+[target.'cfg(windows)'.build-dependencies]
+embed-manifest = "1.4"
