@@ -1,4 +1,4 @@
-# google-research-mcp
+# Google-Research-MCP
 
 A standalone Windows MCP server that gives Claude Google search and web research
 capabilities, powered by [SerpAPI](https://serpapi.com). It ships as a single self-contained
